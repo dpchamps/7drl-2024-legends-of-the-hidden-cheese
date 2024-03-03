@@ -50,6 +50,7 @@
     ]
   },
   "dependencies": {
+    "@pixi/ui": "^0.4.1",
     "pixi.js": "^7.0.4"
   }
 }

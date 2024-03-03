@@ -19,9 +19,34 @@ export default {
 	visible: [],
 	memory: {},
 	items: [],
+	stats: {
+		xp: 0,
+		level: 0,
+		health: 1,
+		strength: 1,
+		dexterity: 1,
+	},
+	vitals: {
+		xp: 0,
+		health: 1
+	},
 	init: function(game) {
 		this.game = game;
-		for (var j = -this.MAX_SIGHT_RANGE; j <= this.MAX_SIGHT_RANGE; j++){
+		this.initSight();
+	},
+	reset(){
+		this.items = [];
+		this.memory = {};
+		this.initSight();
+	},
+	getConsumables(){
+		return this.items.filter((item) => item.def.type.name !== "Weapon")
+	},
+	getEquipment(){
+		return this.items.filter((item) => item.def.type.name === "Weapon")
+	},
+	initSight() {
+		for (let j = -this.MAX_SIGHT_RANGE; j <= this.MAX_SIGHT_RANGE; j++){
 			this.visible[j] = [];
 		}
 	},

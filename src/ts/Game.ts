@@ -14,6 +14,7 @@ import Input from './Input';
 
 import Item from './model/Item.class';
 import Items from './data/Items.data';
+import {GameOverState} from "./screens/game-over";
 
 declare global {
 	interface Window {
@@ -47,15 +48,54 @@ const Game = {
 		Input.init(this);
 		this.display.titleScreen();
 	},
+	endGame(endGameStatus: GameOverState) {
+		this.player.reset();
+		this.display.showGameOverScreen(endGameStatus);
+	},
 	newGame: function () {
 		this.player.updateFOV();
 		this.display.refresh();
-		this.display.textBox.setText("Welcome to JSRL. Move around using the arrow keys, press comma to get items, [I] to access the inventory, then [U] or Enter to use items and [D] to drop them.");
+		this.display.textBox.setText("Find the Cheese. [WASD] to explore, [i] to open menu");
 		Player.addItem(new Item(Items.BOOK_OF_MIRDAS));
 		Player.addItem(new Item(Items.IRON_SWORD));
 		Player.addItem(new Item(Items.BOOK_OF_MIRDAS));
 		Player.addItem(new Item(Items.IRON_SWORD));
 		Player.addItem(new Item(Items.SPELL_OF_LOLZORS));
+		Player.addItem(new Item(Items.SPELL_OF_LOLZORS));
+		Player.addItem(new Item(Items.SPELL_OF_LOLZORS));
+		Player.addItem(new Item(Items.SPELL_OF_LOLZORS));
+		Player.addItem(new Item(Items.SPELL_OF_LOLZORS));
+		Player.addItem(new Item(Items.SPELL_OF_LOLZORS));
+
+		Player.addItem(new Item(Items.BOOK_OF_AURORA));
+		Player.addItem(new Item(Items.IRON_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+		Player.addItem(new Item(Items.GOLDEN_SWORD));
+
+		Player.addItem(new Item(Items.BOOK_OF_AURORA));
+		Player.addItem(new Item(Items.IRON_SWORD));
+		Player.addItem(new Item(Items.BOOK_OF_AURORA));
+		Player.addItem(new Item(Items.IRON_SWORD));
+		Player.addItem(new Item(Items.BOOK_OF_AURORA));
+		Player.addItem(new Item(Items.IRON_SWORD));
+		Player.addItem(new Item(Items.BOOK_OF_AURORA));
+		Player.addItem(new Item(Items.IRON_SWORD));
+		Player.addItem(new Item(Items.BOOK_OF_AURORA));
+		Player.addItem(new Item(Items.IRON_SWORD));
+		Player.addItem(new Item(Items.BOOK_OF_AURORA));
+		Player.addItem(new Item(Items.IRON_SWORD));
 		Player.addItem(new Item(Items.BOOK_OF_AURORA));
 		this.display.activateNewGame();
 	}

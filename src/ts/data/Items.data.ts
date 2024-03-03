@@ -9,6 +9,12 @@ export default {
 		tile: new ut.Tile('/', 128, 128, 128),
 		tilesetData: '32-7'
 	},
+	GOLDEN_SWORD: {
+		type: ItemType.WEAPON,
+		name: 'Golden Sword',
+		tile: new ut.Tile('/', 128, 128, 128),
+		tilesetData: '32-7'
+	},
 	BOOK_OF_MIRDAS: {
 		type: ItemType.BOOK,
 		name: 'Book of Mirdas',

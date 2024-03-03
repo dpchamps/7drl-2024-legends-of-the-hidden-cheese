@@ -22,5 +22,12 @@ export default {
 		useFunction: function(game, item, dx, dy){
 			game.display.message("You cast the "+item.def.name+" in direction x "+dx+" y "+dy);
 		}
+	},
+	CONSUMABLE: {
+		name: 'Consumable',
+		targetted: false,
+		useFunction: function (game, item) {
+
+		}
 	}
 }

@@ -1,6 +1,8 @@
 import { Text } from 'pixi.js';
 
+const textScale = 0.25;
 export default {
+	getTextScaledHeight: (fontSize: number) => fontSize*textScale,
 	createTextBox(x, y, fontSize, initialText, wordWrapWidth?) {
 		const textBox = new Text(initialText, {
 			fontFamily: 'Kenney Pixel',
@@ -10,8 +12,8 @@ export default {
 			wordWrap: !!wordWrapWidth,
 			wordWrapWidth: wordWrapWidth
 		});
-		textBox.scale.x = 0.25;
-		textBox.scale.y = 0.25;
+		textBox.scale.x = textScale;
+		textBox.scale.y = textScale;
 		textBox.position.x = x;
 		textBox.position.y = y;
 		textBox.text = initialText;
