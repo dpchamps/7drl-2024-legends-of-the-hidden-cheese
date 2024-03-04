@@ -1,7 +1,10 @@
-import {Container, Sprite, Texture} from "pixi.js";
+import {Container, Graphics, Sprite, Texture} from "pixi.js";
 import PixiUtils from "../display/pixiDisplay/PixiUtils";
 import {createScrollableContainer} from "./scrollable-container";
 
+const INVENTORY_COLOR = 0x343434;
+const INVENTORY_COLOR_INNER = 0x4F4E4E;
+const INVENTORY_PADDING = 5;
 type InventoryOptions = {
     x: number,
     y: number
@@ -17,8 +20,8 @@ type InstructionsOptions = {
     textFontSize: number,
 }
 const instructions = ({width, textFontSize}: InstructionsOptions) => {
-    const instructions = PixiUtils.createTextBox(width / 3, 0, textFontSize, "", width*1.5 );
-    instructions.text = `Instructions\nUse WASD to explore the world. You automatically pick up items you move over.\n\n'i' to open this menu. 'esc' to close it.\n\nFind the three magical cheeses. Careful, it's dangerous out there! Try finding a weapon.`;
+    const instructions = PixiUtils.createTextBox(width / 2, INVENTORY_PADDING/2, textFontSize, "", width*1.5 );
+    instructions.text = `Instructions\n\nUse WASD to explore the world. You automatically pick up items you move over.\n\n'i' to open this menu. 'esc' to close it.\n\nFind the three magical cheeses. Careful, it's dangerous out there! Try finding a weapon.`;
 
     instructions.visible = false;
 
@@ -36,14 +39,15 @@ const instructions = ({width, textFontSize}: InstructionsOptions) => {
 
 const statsMenu = ({width, textFontSize}: InstructionsOptions) => {
     const statsContainer = new Container();
-    const statsText = PixiUtils.createTextBox(width / 3, 10, textFontSize, "");
+    const statsText = PixiUtils.createTextBox(width / 2, INVENTORY_PADDING/2, textFontSize, "");
 
     statsContainer.addChild(statsText);
     return {
         name: "stats",
         container: statsContainer,
         render: (playerStats, playerVitals) => {
-            statsText.text = Object.entries(playerStats).map(([statName, statValue]) => `${statName}: ${typeof playerVitals[statName] !== 'undefined' ? `${playerVitals[statName]} / ` : ''}${statValue}`).join("\n\n")
+            statsText.text = "Stats\n\n";
+            statsText.text += Object.entries(playerStats).map(([statName, statValue]) => `${statName}: ${typeof playerVitals[statName] !== 'undefined' ? `${playerVitals[statName]} / ` : ''}${statValue}`).join("\n\n")
             statsContainer.visible = true
         },
         hide: () => {
@@ -59,22 +63,23 @@ export const createInventoryScreen = ({x, y, height, width, backgroundTexture, c
     inventoryContainer.position.x = x;
     inventoryContainer.position.y = y;
 
-    const containerBackground = new Sprite(backgroundTexture);
-    containerBackground.width = width;
-    containerBackground.height = height;
-    inventoryContainer.addChild(containerBackground);
+    inventoryContainer.addChild(
+        new Graphics().beginFill(INVENTORY_COLOR).drawRoundedRect(0, 0, width, height, 5),
+        new Graphics().beginFill(INVENTORY_COLOR_INNER).drawRoundedRect(INVENTORY_PADDING, INVENTORY_PADDING*3, width-INVENTORY_PADDING*2, height-INVENTORY_PADDING*6, INVENTORY_PADDING),
+    );
+
 
     const cursor = new Sprite(cursorTexture);
     inventoryContainer.addChild(cursor);
 
-    const title = PixiUtils.createTextBox(0, 0, textFontSize, "Main Menu");
+    const title = PixiUtils.createTextBox(INVENTORY_PADDING*2, INVENTORY_PADDING/2, textFontSize, "Main Menu");
     inventoryContainer.addChild(title);
 
     const scrollableMenu = createScrollableContainer({
         height: height,
         width: width / 2,
-        x: width / 3,
-        y: 0,
+        x: width / 2,
+        y: INVENTORY_PADDING/2,
         backgroundTexture: backgroundTexture,
         cursorTexture: cursorTexture,
         textFontSize: textFontSize,
@@ -111,7 +116,9 @@ export const createInventoryScreen = ({x, y, height, width, backgroundTexture, c
         render: (game) => {
             const outerSelectionIdx = game.input.inventoryManager.outerSelectionIdx();
             const innerSelectionIdx = game.input.inventoryManager.selectionIdx();
-            const items = game.input.inventoryManager.screenItems().map(({def: {name}}) => name);
+            const items = game.input.inventoryManager.screenItems().map(item => {
+                return `${item.def.name}${game.input.inventoryManager.isEquipped(item) ? "*" : ""}`
+            });
             inventoryContainer.visible = true
             cursor.y = (20 * (outerSelectionIdx + 1)) - 3;
             rightMenu.hide();
@@ -123,7 +130,7 @@ export const createInventoryScreen = ({x, y, height, width, backgroundTexture, c
                     break;
                 }
                 case 'stats': {
-                    rightMenu.render(game.player.stats, game.player.vitals);
+                    rightMenu.render(game.player.combatState.stats, game.player.combatState.vitals);
                     break
                 }
                 default : {

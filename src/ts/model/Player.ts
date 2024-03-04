@@ -1,3 +1,10 @@
+
+import * as Stats from "../combat/stats";
+import * as Vitals from "../combat/vitals";
+import * as Combat from "../combat";
+import {CombatState} from "../combat/combat-state";
+import {calculateXpGained} from "../data/experience-table.data";
+
 const ut = (window as any).ut;
 
 /**
@@ -19,16 +26,20 @@ export default {
 	visible: [],
 	memory: {},
 	items: [],
-	stats: {
-		xp: 0,
-		level: 0,
-		health: 1,
-		strength: 1,
-		dexterity: 1,
+	weapon: {
+		name: "Fist",
+		accuracyMod: 1,
+		damageMod: 1,
+		damageRange: [1, 4],
+		threatRange: [20, 20]
 	},
-	vitals: {
-		xp: 0,
-		health: 1
+	combatState: new CombatState({
+		health: 60,
+		strength: 2,
+		dexterity: 2
+	}),
+	armorModifier: {
+		base: 5
 	},
 	init: function(game) {
 		this.game = game;
@@ -37,13 +48,21 @@ export default {
 	reset(){
 		this.items = [];
 		this.memory = {};
+		this.combatState = new CombatState({
+			health: 60,
+			strength: 2,
+			dexterity: 2
+		});
 		this.initSight();
 	},
 	getConsumables(){
-		return this.items.filter((item) => item.def.type.name !== "Weapon")
+		return this.items.filter((item) => item.def.type.type !== "Equipment")
 	},
 	getEquipment(){
-		return this.items.filter((item) => item.def.type.name === "Weapon")
+		return this.items.filter((item) => item.def.type.type === "Equipment")
+	},
+	getKeyItems(){
+		return this.items.filter((item) => item.def.type.name === "Key Item")
 	},
 	initSight() {
 		for (let j = -this.MAX_SIGHT_RANGE; j <= this.MAX_SIGHT_RANGE; j++){
@@ -51,12 +70,46 @@ export default {
 		}
 	},
 	tryMove: function(dir) {
+		const targetDirectionX = this.x+dir.x;
+		const targetDirectionY = this.y+dir.y;
+
+		const targetBeing = this.game.world.level.getBeing(targetDirectionX, targetDirectionY);
+		if(targetBeing){
+			Combat.combatPhase(this, targetBeing, (hitType) => {
+				switch (hitType.type) {
+					case "Miss": {
+						this.game.display.message(`You attempt to hit the enemy ${targetBeing.tileName} with your ${this.weapon.name}, but miss.`);
+						break;
+					}
+					case "Hit": {
+						this.game.display.message(`You strike the enemy ${targetBeing.tileName} with your ${this.weapon.name}.`);
+						break;
+					}
+					case "Critical": {
+						this.game.display.message(`You deal a devastating blow to the enemy ${targetBeing.tileName} with your ${this.weapon.name}!`);
+						break;
+					}
+				}
+			});
+
+			if(targetBeing.combatState.getStatus() === "Dead"){
+				const xpGained = calculateXpGained(this.combatState.stats.level, targetBeing.combatState.stats.level);
+				this.combatState.gainExperience(xpGained, (lastLevel, nextLevel) => {
+					this.game.display.message(`You gained a level, from ${lastLevel} to ${nextLevel}.`);
+				})
+			}
+
+			this.endTurn();
+			return;
+		}
+
 		if (!this.game.world.level.canWalkTo(this.x+dir.x, this.y+dir.y)){
 			this.game.input.inputEnabled = true;
 			return;
 		}
 		this.x += dir.x;
 		this.y += dir.y;
+		this.tryPickup();
 		this.land();
 	},
 	land: function() {
@@ -68,6 +121,12 @@ export default {
 	endTurn: function() {
 		this.updateFOV();
 		this.game.display.refresh();
+		if(this.combatState.getStatus() === "Dead"){
+			this.game.endGame("LOSE");
+		}
+		if(this.getKeyItems().length === 3){
+			this.game.endGame("WIN");
+		}
 		this.game.world.level.beingsTurn();
 	},
 	remember: function(x: number, y: number) {
@@ -127,8 +186,8 @@ export default {
 			var testy = Math.round(yy);
 			this.visible[testx-this.x][testy-this.y] = true;
 			this.remember(testx, testy);
-			try { 
-				if (this.game.world.level.map[testx][testy].opaque)
+			try {
+				if (this.game.world.level.map[testx][testy].opaque || this.game.world.level.mapFeatures?.[testx]?.[testy]?.opaque)
 					return;
 			} catch(err) {
 				// Catch OOB
@@ -141,9 +200,6 @@ export default {
 		return this.items.length < 24;
 	},
 	addItem: function(item) {
-		if (this.items.length === 24){
-			return;
-		}
 		this.items.push(item);
 		this.items.sort(this.itemSorter);
 	},
@@ -181,6 +237,12 @@ export default {
 		}
 	},
 	tryUse: function(item, dx, dy) {
+		debugger
 		item.def.type.useFunction(this.game, item, dx, dy);
+		debugger
+		if(item.def.type.name === "Consumable"){
+			this.removeItem(item);
+			this.game.display.message(`The item has been consumed.`);
+		}
 	}
 }

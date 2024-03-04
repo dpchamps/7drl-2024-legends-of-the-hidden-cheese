@@ -8,9 +8,11 @@
 
 import Being from "./Being.class";
 import Item from "./Item.class";
+import {DROP_TABLE_TYPES, rollDrop} from "../data/drop-tables";
 
 export default class Level {
 	private map: any[];
+	private mapFeatures: any[] = [];
 	private beings: Being[][];
 	private exits: any[];
 	private items: any[];
@@ -19,6 +21,7 @@ export default class Level {
 	private game: any;
 	private id: string;
 	private player: any;
+	private dropTable: DROP_TABLE_TYPES|undefined = undefined;
 
 	constructor (game: any, id: string) {
 		this.init(game, id);
@@ -37,9 +40,27 @@ export default class Level {
 	}
 
 	beingsTurn () {
+		const removeList = [];
 		for (var i = 0; i < this.beingsList.length; i++){
-			this.beingsList[i].act();
+			if(this.beingsList[i].combatState.getStatus() === "Dead") {
+				removeList.push(i)
+			}else {
+				this.beingsList[i].act();
+			}
 		}
+
+		for(const beingsListIdx of removeList){
+			const being = this.beingsList[beingsListIdx];
+			this.game.display.message(`The ${being.tileName} died.`);
+			const drop = rollDrop(this.dropTable || "GENERIC");
+			this.beingsList.splice(beingsListIdx, 1);
+			this.beings[being.x][being.y] = undefined;
+			if(drop){
+				this.addItem(drop, being.x, being.y);
+				this.game.display.message(`The ${being.tileName} dropped a ${drop.def.name}.`);
+			}
+		}
+
 		this.player.updateFOV();
 		this.game.display.refresh();
 		this.game.input.inputEnabled = true;
@@ -55,7 +76,7 @@ export default class Level {
 
 	canWalkTo (x: number, y: number) {
 		try {
-			if (this.map[x][y].solid){
+			if (this.map[x][y].solid || this.mapFeatures?.[x]?.[y]?.solid ){
 				return false;
 			}
 		} catch (e){
@@ -104,5 +125,9 @@ export default class Level {
 		if (!this.beings[being.x + dx])
 			this.beings[being.x + dx] = [];
 		this.beings[being.x + dx][being.y + dy] = being;
+	}
+
+	getBeing(x: number, y: number): Being | undefined {
+		return this.beings[x]?.[y];
 	}
 }

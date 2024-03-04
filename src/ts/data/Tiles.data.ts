@@ -7,7 +7,7 @@ export default {
 		solid: false,
 		opaque: false,
 		name: 'Grass',
-		tilesetData: '5-0'
+		tilesetData: 'world-5-0'
 	},
 	STAIRS_DOWN: {
 		tile: new ut.Tile('>', 255, 255, 255),
@@ -31,7 +31,7 @@ export default {
 		solid: true,
 		opaque: true,
 		name: 'Bush',
-		tilesetData: '2-1'
+		tilesetData: 'world-13-9'
 	},
 	WATER: {
 		tile: new ut.Tile('~', 0, 0, 255),
@@ -40,5 +40,23 @@ export default {
 		opaque: false,
 		name: 'Water',
 		tilesetData: '8-5'
+	},
+	ROCKS: {
+		solid: true,
+		opaque: true,
+		name: 'Rocks',
+		tilesetData: 'world-54-21'
+	},
+	FLOWERS: {
+		solid: false,
+		opaque: false,
+		name: 'Flowers',
+		tilesetData: 'world-3-7'
+	},
+	GRASS_FEATURE_ONE: {
+		solid: false,
+		opaque: false,
+		name: 'Flowers',
+		tilesetData: 'world-22-11'
 	}
 }

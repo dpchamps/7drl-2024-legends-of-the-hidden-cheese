@@ -8,7 +8,7 @@
 import { Text } from "@pixi/text";
 
 export default class PIXITextBox {
-	private PIXIText: Text;
+	PIXIText: Text;
 	private lastUpdateMillis: number;
 
 	constructor (PIXIText: Text) {

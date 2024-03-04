@@ -22,11 +22,11 @@ export const createScrollableContainer = ({x, y, height, width, backgroundTextur
     topLevelContainer.position.x = x;
     topLevelContainer.position.y = y;
 
-    const containerBackground = new Sprite(backgroundTexture);
-    containerBackground.width = width;
-    containerBackground.height = height;
+    // const containerBackground = new Sprite(backgroundTexture);
+    // containerBackground.width = width;
+    // containerBackground.height = height;
 
-    topLevelContainer.addChild(containerBackground);
+    // topLevelContainer.addChild(containerBackground);
 
     const cursor = new Sprite(cursorTexture);
     topLevelContainer.addChild(cursor);

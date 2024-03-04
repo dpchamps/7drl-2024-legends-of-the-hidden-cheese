@@ -17,13 +17,12 @@ Collect 3 three keys, to unlock 3 chests, to get 3 aged cheeses
   * You have a weapon equipped, and move into an enemy square
   * Melee-only
   * (Stretch goal): Magic? Ranged?
-* Map Generation
-  * Steal some of the map gen algos that I've already written for a different project
 * Leveling System
   * Steal from pathfinder
 * Equipment system
   * Equip Weapon
-
+* Map Generation
+  * Steal some of the map gen algos that I've already written for a different project
 ## Required Menus For a Functioning Game
 
 * Inventory
@@ -38,7 +37,7 @@ Collect 3 three keys, to unlock 3 chests, to get 3 aged cheeses
 
 - [x] Title
   - Start New Game
-- [ ] Gameplay
+- [x] Gameplay
     - The Actual Game
     - Menu Screen Overlay
 - [x] Game Over
@@ -88,3 +87,30 @@ exception of the controls subscreen which is not interactive.
 Things:
 - [x] Scrolling is Required
 - [ ] Item Descriptions are Required
+
+# BREAK TIEM 
+### Combat System
+
+As a player of the game, I want to bash monsters. I expect combat to be straightforward, and to get feedback
+on how I'm doing. I would like to see my current hit points in relation to the total, and I would
+like to have some indication for how much the monster has.
+
+- [x] The ability to deal damage to NPCs
+  - [x] Equipment modifies the damage
+- [x] The ability to receive damage from NPCs
+- [x] Visual indication of main characters hit points
+- [x] Damage System
+  - [x] Chance to hit
+  - [x] Damage to deal
+
+### Level Up System
+
+- [x] There are xp thresholds per-level
+  - [x] Static thresholds set in code
+- [x] Gain xp from fighting NPCs
+  - [x] The higher the level NPC, the more XP you gain
+
+### Equipment System
+
+- [x] Weapons improve chance to hit &/or damage dealt
+- [x] Armor improves chance to dodge a hit

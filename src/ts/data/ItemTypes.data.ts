@@ -6,9 +6,14 @@
 export default {
 	WEAPON: {
 		name: 'Weapon',
+		type: "Equipment",
 		useFunction: function(game, item){
 			game.display.message("You wield the "+item.def.name);
 		}
+	},
+	ARMOR: {
+		name: "Armor",
+		type: "Equipment"
 	},
 	BOOK: {
 		name: 'Book',
@@ -27,7 +32,21 @@ export default {
 		name: 'Consumable',
 		targetted: false,
 		useFunction: function (game, item) {
-
+			switch(item.def.consumableData.category){
+				case "HEALING": {
+					const hpToGain = item.def.consumableData.affect.health;
+					game.player.combatState.heal(hpToGain)
+					game.display.message(`You use ${item.def.name} to gain ${hpToGain} health.`)
+					break
+				}
+			}
+		}
+	},
+	KEY_ITEM: {
+		name: "Key Item",
+		targetted: false,
+		useFunction: (game, item) => {
+			game.display.message(item.def.useMessage)
 		}
 	}
 }

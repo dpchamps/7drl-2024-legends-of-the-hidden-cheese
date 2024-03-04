@@ -8,16 +8,15 @@ window.onload = () => {
   Game.start({
     display: 'pixi',
     displayConfig: {
-      tilesetURL: './assets/gfx/1bitpack_kenney_1.2/big-sheet-packed.png',
+      tilesetURL: './assets/gfx/1bitpack_kenney_1.2/colored-transparent_packed.png',
       tilesetCountX: 49,
       tilesetCountY: 22,
       tileSize: 16,
-
       viewportCountX: 27,
       viewportCountY: 27,
       textboxFontSize: 64,
-
-      transparentTiles: false
-    }
+      transparentTiles: true
+    },
+    seed: "dev-test-seed"
   });
 }

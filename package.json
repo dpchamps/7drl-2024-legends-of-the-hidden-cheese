@@ -51,6 +51,8 @@
   },
   "dependencies": {
     "@pixi/ui": "^0.4.1",
-    "pixi.js": "^7.0.4"
+    "pixi.js": "^7.0.4",
+    "random": "^4.1.0",
+    "seedrandom": "^3.0.5"
   }
 }

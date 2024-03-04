@@ -11,6 +11,11 @@ import Random from '../Random';
 
 export default {
 	levels: {},
+	reset(game){
+		this.levels = {};
+		this.level = null;
+		this.init(game);
+	},
 	init: function(game) {
 		this.game = game;
 		this.player = game.player;
@@ -30,11 +35,9 @@ export default {
 				var previousLevelId = this.level.id;
 				this.level = new Level(this.game, levelId);
 				LevelLoader.loadLevel(this.level, levelId, previousLevelId);
-				//LevelGenerator.generateTestLevel(this.level, previousLevelId, 'test'+Random.n(0,1000));
 			} else {
 				this.level = new Level(this.game, levelId);
-				LevelGenerator.generateTestLevel(this.level, undefined, 'test');
-				//LevelGenerator.generateTestLevel(this.level, undefined, 'test'+Random.n(0,1000));
+				LevelGenerator.generateTestLevel(this.level, this.player, undefined, Random.n(0, 10000).toString(), 25, 25);
 			}
 			this.levels[levelId] = this.level;
 		}

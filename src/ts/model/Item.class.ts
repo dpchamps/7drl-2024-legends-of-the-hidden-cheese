@@ -6,10 +6,9 @@
  */
 
 export default class Item {
-	private def: any;
+	def: any;
 	constructor (def: any) {
 		this.def = def;
 	}
 
-	// JSRL Doesn't define any specific behavior for items.
 }

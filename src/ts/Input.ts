@@ -13,6 +13,8 @@ const inventoryInputManager = (game) => {
 	let selectionPane = false;
 	let outerSelect = 0;
 	let selectionIdx = 0;
+	let equippedWeapon = null;
+	let equippedArmor = null;
 
 	const exitInventory = (): Mode => {
 		game.display.hideInventory();
@@ -20,6 +22,10 @@ const inventoryInputManager = (game) => {
 	}
 	
 	return {
+		getEquipped: () => [equippedWeapon, equippedArmor],
+		isEquipped: (item) => {
+			return item === equippedWeapon || item === equippedArmor
+		},
 		selectionPane: () => selectionPane,
 		selectionIdx: () => selectionIdx,
 		screenItems: () => outerSelect === 0 ? game.player.getConsumables() : game.player.getEquipment(),
@@ -65,6 +71,25 @@ const inventoryInputManager = (game) => {
 			}
 			else if (k === ut.KEY_ENTER ){
 				const selectedItem = this.selectedItem();
+
+				if(outerSelect === 1){
+					console.log("Trying to equip", selectedItem);
+					switch (selectedItem.def.type.name){
+						case "Weapon": {
+							game.player.weapon = selectedItem.def.weaponStats
+							equippedWeapon = selectedItem
+							break;
+						}
+						case "Armor": {
+							game.player.armorModifier = selectedItem.def.armorModifier
+							equippedArmor = selectedItem
+							break;
+						}
+					}
+					return "INVENTORY";
+				}
+
+
 				if (selectedItem.def.targetted || selectedItem.def.type.targetted){
 					game.display.message("Select a direction.");
 					game.display.hideInventory();
@@ -99,17 +124,12 @@ export default {
 			}
 		} else if (this.mode === 'MOVEMENT'){
 			if(k === ut.KEY_1){
-				this.mode = "TITLE";
 				this.game.endGame("WIN");
 			}
 			if(k === ut.KEY_2) {
-				this.mode = "TITLE";
 				this.game.endGame("LOSE");
 			}
-			if (k === ut.KEY_COMMA){
-				this.game.player.tryPickup();
-				return;
-			}
+
 			if (k === ut.KEY_I){
 				if (this.game.player.items.length === 0){
 					this.game.display.message("You don't have any items");
