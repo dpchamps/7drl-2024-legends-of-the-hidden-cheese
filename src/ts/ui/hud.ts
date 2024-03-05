@@ -33,11 +33,12 @@ export const createHUD = ({heartFilledTexture, heartEmptyTexture, messageLog}: H
 
     return {
         container: hudContainer,
-        render: (playerCombatState: CombatState, equippedItems: Texture[]) => {
+        render: (playerCombatState: CombatState, equippedItems: Texture[], currentMapId: string) => {
             updatable.removeChildren();
 
             const playerLevel = PixiUtils.createTextBox(HUD_PADDING, HUD_PADDING, 70, `Level: ${playerCombatState.stats.level}`, undefined, 0x0);
-            updatable.addChild(playerLevel);
+            const playerMapPosition = PixiUtils.createTextBox(HUD_PADDING+50, HUD_PADDING, 70, currentMapId, undefined, 0x0);
+            updatable.addChild(playerLevel, playerMapPosition);
             const numberHearts = Math.floor(playerCombatState.stats.health / HEART_DIVIDER);
             Array(numberHearts).fill(0).forEach((_, i) => {
                 const texture = playerCombatState.vitals.health >= i * HEART_DIVIDER ? heartFilledTexture : heartEmptyTexture;

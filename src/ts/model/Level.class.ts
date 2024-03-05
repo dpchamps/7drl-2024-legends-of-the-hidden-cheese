@@ -9,22 +9,28 @@
 import Being from "./Being.class";
 import Item from "./Item.class";
 import {DROP_TABLE_TYPES, rollDrop} from "../data/drop-tables";
+import {Biome, Biomes} from "../proc-gen/biomes";
 
 export default class Level {
 	private map: any[];
-	private mapFeatures: any[] = [];
+	mapFeatures: any[] = [];
 	private beings: Being[][];
 	private exits: any[];
 	private items: any[];
 	
 	private beingsList: Being[];
-	private game: any;
-	private id: string;
+	game: any;
+	id: string;
 	private player: any;
 	private dropTable: DROP_TABLE_TYPES|undefined = undefined;
+	exitMap: Record<string, {x: number, y: number}> = {};
+	biome: Biome
+	dimensions: {x: number, y: number};
 
-	constructor (game: any, id: string) {
+	constructor (game: any, id: string, biome?: Biome, dimensions?: {x: number, y: number}) {
 		this.init(game, id);
+		this.biome = biome || Biomes.Forest;
+		this.dimensions = dimensions;
 	}
 
 	init (game: any, id: string) {
@@ -91,13 +97,16 @@ export default class Level {
 		return true;
 	}
 
-	addExit (x: number, y: number, levelId: string, tile: any) {
+	addExit (x: number, y: number, levelId: string, tile: any, start?: {x: number, y: number}) {
 		if (!this.map[x])
 			this.map[x] = [];
 		this.map[x][y] = tile;
 		if (!this.exits[x])
 			this.exits[x] = [];
 		this.exits[x][y] = levelId;
+		if(start){
+			this.exitMap[`${start.x}-${start.y}`] = {x, y}
+		}
 	}
 
 	addItem (item: Item, x: number, y: number) {
@@ -129,5 +138,28 @@ export default class Level {
 
 	getBeing(x: number, y: number): Being | undefined {
 		return this.beings[x]?.[y];
+	}
+
+	getUnoccupiedSpaces(){
+		const unoccupiedSpaces: {x: number, y: number}[] = [];
+		debugger
+
+		for(let x = 0; x < this.map.length; x += 1){
+			for(let y = 0; y < this.map[0].length; y += 1){
+				if(
+					!Boolean(this.beings?.[x]?.[y])
+					&& !Boolean(this.items?.[x]?.[y])
+					&& !Boolean(this.mapFeatures?.[x]?.[y])
+				) {
+					unoccupiedSpaces.push(({x, y}))
+				}
+			}
+		}
+
+		return unoccupiedSpaces
+	}
+
+	hasBeings(){
+		return this.beingsList.length > 0
 	}
 }

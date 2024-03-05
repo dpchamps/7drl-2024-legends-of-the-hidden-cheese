@@ -17,6 +17,7 @@ import Items from './data/Items.data';
 import {GameOverState} from "./screens/game-over";
 import Random from "./Random";
 import random from "./Random";
+import {generateOverWorld} from "./proc-gen/generate-overworld";
 
 declare global {
 	interface Window {

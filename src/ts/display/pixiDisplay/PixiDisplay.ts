@@ -125,12 +125,12 @@ export default {
 		const text = new Text('', {
 			fontFamily: 'Kenney Pixel',
 			fontSize: config.textboxFontSize,
-			fill: 0xdddddd,
+			fill: 0x0,
 			align: 'left',
 			wordWrap: true,
 			wordWrapWidth: config.tileSize * config.viewportCountX * 4
 		});
-		text.position.x = 10;
+		text.position.x = 8;
 		text.position.y = 10;
 		text.scale.x = 0.25;
 		text.scale.y = 0.25;
@@ -255,7 +255,7 @@ export default {
 		const equippedItems = this.game.input.inventoryManager.getEquipped().filter((x) => x !== null).map((item) => {
 			return this.textureMap[item.def.tilesetData]
 		})
-		this.hud.render(player.combatState, equippedItems);
+		this.hud.render(player.combatState, equippedItems, this.game.world.level.id);
 	},
 	showInventory: function() {
 		const selectedIndex = this.game.input.inventoryManager.selectionIdx();

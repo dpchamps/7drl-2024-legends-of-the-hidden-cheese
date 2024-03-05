@@ -63,7 +63,7 @@ export default {
 		consumableData: {
 			category: "HEALING",
 			affect: {
-				health: 10
+				health: 25
 			}
 		}
 	},
@@ -74,7 +74,7 @@ export default {
 		consumableData: {
 			category: "HEALING",
 			affect: {
-				health: 30
+				health: 60
 			}
 		}
 	},

@@ -114,3 +114,15 @@ like to have some indication for how much the monster has.
 
 - [x] Weapons improve chance to hit &/or damage dealt
 - [x] Armor improves chance to dodge a hit
+
+### Procedural Map Generation
+
+As a player, I would like a rich and unique experience each time I play the game. This should materialize
+as different maps, different layouts, different loot drops on each run.
+
+- [x] A world that is randomly connected
+- [x] Loot dropped throughout this world
+- [x] Interesting looking maps that are randomly generated
+  - [x] Biomes throughout the world
+  - [x] Appropriate item placement in each biome
+- [x] Sensible wandering monster encounters

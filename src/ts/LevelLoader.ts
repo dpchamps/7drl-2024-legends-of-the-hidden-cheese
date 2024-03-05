@@ -18,17 +18,18 @@ const mirrorExit = (playerX: number, playerY: number) => {
 	}
 }
 export default {
-	loadLevel: function(level, mapId, fromId){
+	loadLevel: function(level, mapId, fromId, idPrefix, overworld){
+		debugger
 		const map = levelMaps[mapId];
 		level.map = [];
-		if(!map) {
-			const knownExit = mirrorExit(level.player.x, level.player.y);
-
-			LevelGenerator.generateTestLevel(level, level.player, fromId, mapId, 25, 25, knownExit);
-			level.player.x = knownExit.x;
-			level.player.y = knownExit.y;
-			return
-		}
+		// if(!map) {
+		// 	const knownExit = mirrorExit(level.player.x, level.player.y);
+		//
+		// 	LevelGenerator.generateTestLevel(level, level.player, fromId, mapId, 25, 25, idPrefix, overworld, knownExit);
+		// 	level.player.x = knownExit.x;
+		// 	level.player.y = knownExit.y;
+		// 	return
+		// }
 		const defsMap = {};
 		const defsList = globalDefs.concat(map.defs);
 		for (var y = 0; y < map.map.length; y++){
