@@ -5,12 +5,11 @@ export const ExperienceThresholds = Array(LEVEL_CAP).fill(0).map(
 
 export const StatGrowthTable = Array(LEVEL_CAP).fill(0).map(
     (_, i) => ({
-        health: 1+i,
+        health: 2*i,
         strength: 1+i,
         dexterity: 1+i
     })
-)
-
+);
 
 
 export const getExperienceForLevel = (level: number) => {

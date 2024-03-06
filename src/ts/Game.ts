@@ -13,11 +13,10 @@ import Player from './model/Player';
 import Input from './Input';
 
 import Item from './model/Item.class';
-import Items from './data/Items.data';
+import Items, {ConsumableCategories} from './data/Items.data';
 import {GameOverState} from "./screens/game-over";
-import Random from "./Random";
 import random from "./Random";
-import {generateOverWorld} from "./proc-gen/generate-overworld";
+import player from "./model/Player";
 
 declare global {
 	interface Window {
@@ -62,13 +61,23 @@ const Game = {
 		this.display.showGameOverScreen(endGameStatus);
 	},
 	newGame: function () {
+		this.player.x = Math.floor(this.world.level.dimensions.x / 2);
+		this.player.y = Math.floor(this.world.level.dimensions.y / 2);
 		this.player.updateFOV();
+
 		this.display.refresh();
 		this.display.textBox.setText("Find the Cheese. [WASD] to explore, [i] to open menu");
-		Player.addItem(new Item(Items.POTION_OF_HEALING));
-		Player.addItem(new Item(Items.POTION_OF_HEALING));
-		Player.addItem(new Item(Items.POTION_OF_HEALING));
-		Player.addItem(new Item(Items.HEARTY_POTION_OF_HEALING));
+
+		const starterItems = this.world.lootTable.getItemsByTypeByRarity("consumables", "Common");
+
+		starterItems.filter((item) => item?.consumableData.category === ConsumableCategories.Healing).slice(0, 3).forEach(item => {
+			Player.addItem(new Item(item));
+		});
+
+		starterItems.filter((item) => item?.consumableData.category === ConsumableCategories.Buff).slice(0, 1).forEach((item) => {
+			Player.addItem(new Item(item))
+		});
+
 		this.display.activateNewGame();
 	}
 }

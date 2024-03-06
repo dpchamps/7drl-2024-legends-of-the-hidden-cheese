@@ -65,6 +65,8 @@ export const generateLevelsFromOverworld = (game: typeof Game, overworld: Record
 		const height = levelDimensions.y;
         LevelGenerator.generateTestLevel(level, (game as any).player, "", "", levelDimensions.y, levelDimensions.x, "", overworld);
 
+		level.dimensions = levelDimensions;
+
         for(const exit of tile.exits) {
             let exitCoord;
             if(knownExits[`${tile.mapId}-${exit.direction}`]) {
@@ -72,7 +74,6 @@ export const generateLevelsFromOverworld = (game: typeof Game, overworld: Record
             }else {
                 const exitCenter = generateExitOnEdge(exit.direction, levelDimensions.x, levelDimensions.y);
                 const mirroredExit = mirror(exitCenter.x, exitCenter.y, levelDimensions.x, levelDimensions.y);
-				// console.log({exitCenter, mirroredExit})
                 knownExits[`${tile.mapId}-${exit.direction}`] = exitCenter;
                 knownExits[`${exit.toMapId}-${exit.oppositeExit}`] = mirroredExit;
                 exitCoord = exitCenter;

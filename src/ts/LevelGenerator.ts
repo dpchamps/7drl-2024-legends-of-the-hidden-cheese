@@ -29,6 +29,6 @@ export default {
 			}
 		}
 
-		spawnItemLootDrops(level);
+		// spawnItemLootDrops(level);
 	}
 }

@@ -4,9 +4,16 @@ import {ExperienceThresholds, getExperienceForLevel, StatGrowthTable} from "../d
 
 export type BeingState = "Alive" | "Dead" | "Dying";
 
+export type Buff = {
+    stats: Pick<Stats.Stats, "strength" | "health" | "dexterity">,
+    turns: number,
+    name: string,
+}
+
 export class CombatState {
     stats: Stats.Stats;
     vitals: Vitals.Vitals;
+    buffs: Buff[] = []
 
 
     constructor(stats: Partial<Stats.Stats>) {
@@ -48,5 +55,20 @@ export class CombatState {
             onLevelUp(lastLevel, this.stats.level)
             this.gainExperience(0, onLevelUp);
         }
+    }
+
+    getStatsWithBuffs(): Stats.Stats{
+        return this.buffs.reduce(
+            (acc, buff) => {
+                return Object.entries(buff.stats).reduce(
+                    (acc, [buffName, buffValue]) => {
+                        acc[buffName] += buffValue;
+                        return acc
+                    },
+                    acc
+                )
+            },
+            {...this.stats}
+        );
     }
 }

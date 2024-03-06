@@ -284,9 +284,10 @@ export default {
 		this.screenTransition(() => this.titleScreenContainer.visible = true);
 	},
 	activateNewGame() {
+		this.textBox.reset();
 		this.screenTransition(() => this.mainGameContainer.visible = true);
 	},
 	showGameOverScreen(gameOverStatus: GameOverState) {
-		this.screenTransition(() => showGameOverScreen(gameOverStatus, this.gameOverScreenContainer));
+		this.screenTransition(() => showGameOverScreen(gameOverStatus, this.gameOverScreenContainer, this.textBox));
 	}
 }

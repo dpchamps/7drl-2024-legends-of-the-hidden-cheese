@@ -94,6 +94,7 @@ export default {
 
 			if(targetBeing.combatState.getStatus() === "Dead"){
 				const xpGained = calculateXpGained(this.combatState.stats.level, targetBeing.combatState.stats.level);
+				console.log({xpGained});
 				this.combatState.gainExperience(xpGained, (lastLevel, nextLevel) => {
 					this.game.display.message(`You gained a level, from ${lastLevel} to ${nextLevel}.`);
 				})
@@ -127,6 +128,7 @@ export default {
 		if(this.getKeyItems().length === 3){
 			this.game.endGame("WIN");
 		}
+		this.tickActiveBuffs();
 		this.game.world.level.beingsTurn();
 	},
 	remember: function(x: number, y: number) {
@@ -197,7 +199,7 @@ export default {
 		}
 	},
 	canPick: function() {
-		return this.items.length < 24;
+		return true;
 	},
 	addItem: function(item) {
 		this.items.push(item);
@@ -237,12 +239,20 @@ export default {
 		}
 	},
 	tryUse: function(item, dx, dy) {
-		debugger
 		item.def.type.useFunction(this.game, item, dx, dy);
-		debugger
 		if(item.def.type.name === "Consumable"){
 			this.removeItem(item);
 			this.game.display.message(`The item has been consumed.`);
 		}
+	},
+	tickActiveBuffs(){
+		this.combatState.buffs = this.combatState.buffs
+			.map((buff) => ({...buff, turns: buff.turns-1}))
+			.filter((buff) => {
+				if(buff.turns <= 0){
+					this.game.display.message(`The ${buff.name} wore off.`);
+				}
+				return buff.turns > 0;
+			});
 	}
 }

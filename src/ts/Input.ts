@@ -73,7 +73,6 @@ const inventoryInputManager = (game) => {
 				const selectedItem = this.selectedItem();
 
 				if(outerSelect === 1){
-					console.log("Trying to equip", selectedItem);
 					switch (selectedItem.def.type.name){
 						case "Weapon": {
 							game.player.weapon = selectedItem.def.weaponStats

@@ -68,21 +68,25 @@ type CombatableBeing = {
 }
 
 export const combatPhase = (sourceBeing: CombatableBeing, targetBeing: CombatableBeing, cb: (hitType: HitType) => void) => {
-    const hitType = rollToHit(sourceBeing.combatState.stats, sourceBeing.weapon, targetBeing.combatState.stats, targetBeing.armorModifier);
+    const sourceBeingStats = sourceBeing.combatState.getStatsWithBuffs();
+    const targetBeingStats = targetBeing.combatState.getStatsWithBuffs();
+    const hitType = rollToHit(sourceBeingStats, sourceBeing.weapon, targetBeingStats, targetBeing.armorModifier);
     cb(hitType);
     switch (hitType.type) {
-        case "Miss": {
-            break;
-        }
         case "Hit": {
-            const damage = rollDamage(sourceBeing.combatState.stats, sourceBeing.weapon);
+            const damage = rollDamage(sourceBeingStats, sourceBeing.weapon);
             targetBeing.combatState.dealDamage(damage);
             break;
         }
+        case "Miss": {
+            break;
+        }
         case "Critical": {
-            const damage = rollDamage(sourceBeing.combatState.stats, sourceBeing.weapon) * 2;
+            const damage = rollDamage(sourceBeingStats, sourceBeing.weapon) * 2;
             targetBeing.combatState.dealDamage(damage);
             break;
         }
     }
+
+    console.log((targetBeing as any).tileName, targetBeing.combatState.stats.health, targetBeing.combatState.vitals.health)
 }

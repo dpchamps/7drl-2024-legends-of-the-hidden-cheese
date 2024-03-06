@@ -151,7 +151,6 @@ export const generateOverWorld = (nTiles: number) => {
     }
 
 
-    console.log(overworld.testGet());
 
     return overworld.getOverworldMap();
 }

@@ -12,6 +12,11 @@ import {generateOverWorld} from "../proc-gen/generate-overworld";
 import {generateLevelsFromOverworld} from "../proc-gen/generate-levels-from-overworld";
 import {spawnWanderingMonsters} from "../proc-gen/wandering-monsters";
 import {generateGameWinningItems} from "../proc-gen/generate-game-winning-items";
+import {generateItems} from "../proc-gen/item-generator";
+import {LootTable} from "../proc-gen/LootTable";
+import Item from "./Item.class";
+import random from "../Random";
+import {spawnMonster} from "../proc-gen/monster-generator";
 
 export default {
 	levels: {},
@@ -23,20 +28,37 @@ export default {
 	init: function(game) {
 		this.game = game;
 		this.player = game.player;
-		this.overworldMap =  generateOverWorld(8);
+		this.overworldMap =  generateOverWorld(25);
+		this.lootTable = new LootTable(generateItems());
 		const levels = generateLevelsFromOverworld(game, this.overworldMap, "world", {x: 25, y: 25});
+
+		const lootIterator = this.lootTable.getLootDropIterator();
+		const lootIteratorInstance = lootIterator('Common');
 		levels.forEach((level) => {
+			const unoccupiedSpaces = level.getUnoccupiedSpaces();
+			for(let i = 0; i <= Random.n(0, 7); i += 1){
+				if(Random.n(0, 5) <=2 ) continue;
+				const lootDrop = level.biome.rarityDrops[Random.n(0, level.biome.rarityDrops.length-1)];
+				const {value} = lootIteratorInstance.next(lootDrop);
+				const item = new Item(value);
+				const nextSpaceIndex = Random.n(0, unoccupiedSpaces.length-1);
+				const nextSpace = unoccupiedSpaces[nextSpaceIndex];
+				unoccupiedSpaces.splice(nextSpaceIndex, 1);
+				if(item && unoccupiedSpaces){
+					level.addItem(item, nextSpace.x, nextSpace.y)
+				}
+
+			}
 			this.levels[level.id] = level
 		})
 		generateGameWinningItems(this.levels);
-		console.log(this.overworldMap);
 		this.level = this.levels['world-0-0'];
 		this.loadLevel(`world-0-0`);
 	},
 	loadLevel: function(levelId: string) {
 		if (this.levels[levelId]){
 			this.level = this.levels[levelId];
-			spawnWanderingMonsters(this.level);
+			spawnWanderingMonsters(this.level, this.lootTable);
 			const mappedPosition = this.level.exitMap[`${this.player.x}-${this.player.y}`];
 			if(mappedPosition){
 				this.player.x = mappedPosition.x;

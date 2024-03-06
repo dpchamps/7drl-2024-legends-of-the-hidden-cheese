@@ -1,6 +1,7 @@
 import {Container, Graphics, Sprite, Texture} from "pixi.js";
 import PixiUtils from "../display/pixiDisplay/PixiUtils";
 import {createScrollableContainer} from "./scrollable-container";
+import {getItemInventoryDescription} from "./item-description";
 
 const INVENTORY_COLOR = 0x343434;
 const INVENTORY_COLOR_INNER = 0x4F4E4E;
@@ -96,6 +97,9 @@ export const createInventoryScreen = ({x, y, height, width, backgroundTexture, c
     const statsContainer = statsMenu({width, textFontSize});
     inventoryContainer.addChild(statsContainer.container);
 
+    const descriptionContainer = PixiUtils.createTextBox(INVENTORY_PADDING*2, 130, textFontSize, "", width*2);
+    inventoryContainer.addChild(descriptionContainer);
+
     const rightMenuMap = [
         scrollableMenu,
         scrollableMenu,
@@ -117,7 +121,7 @@ export const createInventoryScreen = ({x, y, height, width, backgroundTexture, c
             const outerSelectionIdx = game.input.inventoryManager.outerSelectionIdx();
             const innerSelectionIdx = game.input.inventoryManager.selectionIdx();
             const items = game.input.inventoryManager.screenItems().map(item => {
-                return `${item.def.name}${game.input.inventoryManager.isEquipped(item) ? "*" : ""}`
+                return `${game.input.inventoryManager.isEquipped(item) ? "*" : ""}${item.def.name}`
             });
             inventoryContainer.visible = true
             cursor.y = (20 * (outerSelectionIdx + 1)) - 3;
@@ -130,10 +134,16 @@ export const createInventoryScreen = ({x, y, height, width, backgroundTexture, c
                     break;
                 }
                 case 'stats': {
-                    rightMenu.render(game.player.combatState.stats, game.player.combatState.vitals);
+                    rightMenu.render(game.player.combatState.getStatsWithBuffs(), game.player.combatState.vitals);
                     break
                 }
                 default : {
+                    const selectedItem = game.input.inventoryManager.selectedItem();
+                    if(selectedItem && game.input.inventoryManager.selectionPane()){
+                        descriptionContainer.text = getItemInventoryDescription(selectedItem);
+                    } else {
+                        descriptionContainer.text = "";
+                    }
                     rightMenu.render(innerSelectionIdx, items, game.input.inventoryManager.selectionPane());
                 }
             }

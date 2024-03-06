@@ -33,11 +33,19 @@ export default {
 		targetted: false,
 		useFunction: function (game, item) {
 			switch(item.def.consumableData.category){
-				case "HEALING": {
+				case "Healing": {
 					const hpToGain = item.def.consumableData.affect.health;
 					game.player.combatState.heal(hpToGain)
 					game.display.message(`You use ${item.def.name} to gain ${hpToGain} health.`)
 					break
+				}
+				case "Buff": {
+					game.player.combatState.buffs.push({
+						...item.def.consumableData.affect,
+						name: item.def.name
+					});
+					game.display.message(`You use ${item.def.name} to gain ${Object.entries(item.def.consumableData.affect.stats).map(x => x.reverse().join(" ")).join(",")}.`);
+					break;
 				}
 			}
 		}

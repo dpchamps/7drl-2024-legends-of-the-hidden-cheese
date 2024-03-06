@@ -17,6 +17,6 @@ window.onload = () => {
       textboxFontSize: 64,
       transparentTiles: true
     },
-    seed: "dev-test-seed123456"
+    seed: "0.32422010909778143"
   });
 }

@@ -8,8 +8,8 @@
 
 import Being from "./Being.class";
 import Item from "./Item.class";
-import {DROP_TABLE_TYPES, rollDrop} from "../data/drop-tables";
 import {Biome, Biomes} from "../proc-gen/biomes";
+import {rollDrop} from "../data/drop-tables";
 
 export default class Level {
 	private map: any[];
@@ -22,7 +22,6 @@ export default class Level {
 	game: any;
 	id: string;
 	private player: any;
-	private dropTable: DROP_TABLE_TYPES|undefined = undefined;
 	exitMap: Record<string, {x: number, y: number}> = {};
 	biome: Biome
 	dimensions: {x: number, y: number};
@@ -58,7 +57,7 @@ export default class Level {
 		for(const beingsListIdx of removeList){
 			const being = this.beingsList[beingsListIdx];
 			this.game.display.message(`The ${being.tileName} died.`);
-			const drop = rollDrop(this.dropTable || "GENERIC");
+			const drop = rollDrop(this.game.world.lootTable, being.combatState.stats.level);
 			this.beingsList.splice(beingsListIdx, 1);
 			this.beings[being.x][being.y] = undefined;
 			if(drop){
@@ -142,7 +141,6 @@ export default class Level {
 
 	getUnoccupiedSpaces(){
 		const unoccupiedSpaces: {x: number, y: number}[] = [];
-		debugger
 
 		for(let x = 0; x < this.map.length; x += 1){
 			for(let y = 0; y < this.map[0].length; y += 1){

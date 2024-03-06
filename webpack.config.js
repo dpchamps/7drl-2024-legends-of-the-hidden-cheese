@@ -27,7 +27,7 @@ module.exports = (env, args) => {
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       inject: true,
-      title: `JSRL | ${gfx} | ${target}`,
+      title: `Legends of the Hidden Cheese`,
       graphics: gfx
     })
   )

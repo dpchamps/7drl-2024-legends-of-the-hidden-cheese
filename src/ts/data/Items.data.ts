@@ -4,6 +4,12 @@ const ut = (window as any).ut;
 
 import ItemType from './ItemTypes.data';
 
+export const ConsumableCategories = {
+	Healing: "Healing",
+	Buff: "Buff",
+	SpecialBuff: "Special Buff"
+} as const;
+
 export default {
 	IRON_SWORD: {
 		type: ItemType.WEAPON,
@@ -24,6 +30,7 @@ export default {
 		weaponStats: weaponStats({
 			name: 'Golden Sword',
 			damageMod: 2,
+			accuracyMod: 1,
 			damageRange: [1, 12],
 			threatRange: [18, 20]
 		})
@@ -56,12 +63,26 @@ export default {
 		tile: new ut.Tile('S', 0, 255, 0),
 		tilesetData: '45-5'
 	},
+	POTION_OF_STRENGTH: {
+		type: ItemType.CONSUMABLE,
+		name: "Potion of Strength",
+		tilesetData: '34-14',
+		consumableData: {
+			category: ConsumableCategories.Buff,
+			affect: {
+				stats: {
+					strength: 3
+				},
+				turns: 2,
+			}
+		}
+	},
 	POTION_OF_HEALING: {
 		type: ItemType.CONSUMABLE,
 		name: "Potion of Healing",
 		tilesetData: '42-11',
 		consumableData: {
-			category: "HEALING",
+			category: ConsumableCategories.Healing,
 			affect: {
 				health: 25
 			}
@@ -72,7 +93,7 @@ export default {
 		name: "Hearty Potion of Healing",
 		tilesetData: '42-11',
 		consumableData: {
-			category: "HEALING",
+			category: ConsumableCategories.Healing,
 			affect: {
 				health: 60
 			}

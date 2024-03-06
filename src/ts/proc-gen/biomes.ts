@@ -2,6 +2,7 @@ import Tiles from "../data/Tiles.data";
 import RacesData from "../data/Races.data";
 import ItemsData from "../data/Items.data";
 import Item from "../model/Item.class";
+import {ItemRarity} from "./item-generator";
 
 type T_Tile = typeof Tiles[keyof typeof Tiles];
 type T_Race = typeof RacesData[keyof typeof RacesData];
@@ -12,7 +13,9 @@ export type Biome = {
     edgeTile: T_Tile,
     decorations: T_Tile[],
     npcs: T_Race[],
-    items: T_Item[]
+    items: T_Item[],
+    rarityDrops: ItemRarity[],
+    levelRange: [number, number]
 };
 
 const createBiome = (biome: Biome): Biome => biome
@@ -38,7 +41,11 @@ export const Biomes = {
             ItemsData.IRON_SWORD,
             ItemsData.IRON_ARMOR,
             ItemsData.POTION_OF_HEALING
-        ]
+        ],
+        rarityDrops: [
+            "Common"
+        ],
+        levelRange: [1, 3]
     }),
     Desert: createBiome({
         groundTile: Tiles.SAND_TERRAIN,
@@ -55,7 +62,12 @@ export const Biomes = {
         items: [
             ItemsData.HEARTY_POTION_OF_HEALING,
             ItemsData.GOLDEN_SWORD
-        ]
+        ],
+        rarityDrops: [
+            "Uncommon",
+            "Rare"
+        ],
+        levelRange: [10,20]
     }),
     Swamp: createBiome({
         groundTile: Tiles.SWAMP_TERRAIN,
@@ -73,6 +85,11 @@ export const Biomes = {
         items: [
             ItemsData.POTION_OF_HEALING,
             ItemsData.HEARTY_POTION_OF_HEALING
-        ]
+        ],
+        rarityDrops: [
+            "Common",
+            "Uncommon"
+        ],
+        levelRange: [5, 15]
     })
 } as const;
