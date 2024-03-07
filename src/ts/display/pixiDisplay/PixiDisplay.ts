@@ -45,7 +45,7 @@ const loadSound = (url: string): Promise<Sound> => new Promise((res, rej) => {
 		url,
 		preload: true,
 		loop: true,
-		volume: 0.005,
+		volume: 0.033,
 		loaded(err, sound){
 			if(err) return rej(err);
 			res(sound);

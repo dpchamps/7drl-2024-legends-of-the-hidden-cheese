@@ -1,5 +1,7 @@
 # Legends of the Hidden Cheese
 
+Play Here: https://dchump.itch.io/legends-of-the-hidden-cheese
+
 ## Game loop
 1. Get Loot
 2. Kill Monsters
@@ -88,7 +90,6 @@ Things:
 - [x] Scrolling is Required
 - [ ] Item Descriptions are Required
 
-# BREAK TIEM 
 ### Combat System
 
 As a player of the game, I want to bash monsters. I expect combat to be straightforward, and to get feedback
