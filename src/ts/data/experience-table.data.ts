@@ -1,4 +1,4 @@
-const LEVEL_CAP = 20;
+export const LEVEL_CAP = 21;
 export const ExperienceThresholds = Array(LEVEL_CAP).fill(0).map(
     (_, i) => Math.pow(2, i)
 );

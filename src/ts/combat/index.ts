@@ -88,5 +88,4 @@ export const combatPhase = (sourceBeing: CombatableBeing, targetBeing: Combatabl
         }
     }
 
-    console.log((targetBeing as any).tileName, targetBeing.combatState.stats.health, targetBeing.combatState.vitals.health)
 }

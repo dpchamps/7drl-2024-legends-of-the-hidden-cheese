@@ -142,8 +142,8 @@ export default class Level {
 	getUnoccupiedSpaces(){
 		const unoccupiedSpaces: {x: number, y: number}[] = [];
 
-		for(let x = 0; x < this.map.length; x += 1){
-			for(let y = 0; y < this.map[0].length; y += 1){
+		for(let x = 1; x < this.map.length-1; x += 1){
+			for(let y = 1; y < this.map[0].length-1; y += 1){
 				if(
 					!Boolean(this.beings?.[x]?.[y])
 					&& !Boolean(this.items?.[x]?.[y])

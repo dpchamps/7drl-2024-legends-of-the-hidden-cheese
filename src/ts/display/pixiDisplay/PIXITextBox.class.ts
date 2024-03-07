@@ -10,7 +10,8 @@ import { Text } from "@pixi/text";
 export default class PIXITextBox {
 	PIXIText: Text;
 	private lastUpdateMillis: number;
-	private lastMessages: string[]
+	private lastMessages: string[];
+	timeoutClear: NodeJS.Timeout | undefined = undefined;
 
 	constructor (PIXIText: Text) {
 		this.PIXIText = PIXIText;
@@ -25,17 +26,25 @@ export default class PIXITextBox {
 	setText (str: string) {
 		this.PIXIText.text = str;
 	};
+
+	getLastMessages(n: number){
+		return this.lastMessages.slice(Math.max(0, this.lastMessages.length - n))
+	}
+
 	addText (str: string) {
 		this.lastMessages.push(str);
+		const nextText = this.getLastMessages(2);
 		var currentTime = new Date().getTime();
-		if (currentTime - this.lastUpdateMillis > 200){
-			this.PIXIText.text = '';
-		}
-		this.lastUpdateMillis = currentTime; 
-		this.PIXIText.text += str;
+		clearTimeout(this.timeoutClear);
+		this.timeoutClear = setTimeout(() => {
+			this.PIXIText.text = this.lastMessages[this.lastMessages.length-1];
+		}, 1200);
+
+		this.lastUpdateMillis = currentTime;
+		this.PIXIText.text = nextText.join(" ");
 	}
 
 	getLog(){
-		return this.lastMessages.slice(Math.max(0, this.lastMessages.length - 20)).join("\n");
+		return this.getLastMessages(20).join("\n");
 	}
 }

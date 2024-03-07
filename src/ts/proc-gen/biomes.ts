@@ -9,6 +9,7 @@ type T_Race = typeof RacesData[keyof typeof RacesData];
 type T_Item = typeof ItemsData[keyof typeof ItemsData];
 
 export type Biome = {
+    name: string,
     groundTile: T_Tile,
     edgeTile: T_Tile,
     decorations: T_Tile[],
@@ -25,6 +26,7 @@ export type BiomeTypes = keyof typeof Biomes;
 
 export const Biomes = {
     Forest: createBiome({
+        name: "Forest",
         groundTile: Tiles.GRASS,
         edgeTile: Tiles.BUSH,
         decorations: [
@@ -48,6 +50,7 @@ export const Biomes = {
         levelRange: [1, 3]
     }),
     Desert: createBiome({
+        name: "Desert",
         groundTile: Tiles.SAND_TERRAIN,
         edgeTile: Tiles.ROCKS,
         decorations: [
@@ -70,6 +73,7 @@ export const Biomes = {
         levelRange: [10,20]
     }),
     Swamp: createBiome({
+        name: "Swamp",
         groundTile: Tiles.SWAMP_TERRAIN,
         edgeTile: Tiles.PILLAR,
         decorations: [

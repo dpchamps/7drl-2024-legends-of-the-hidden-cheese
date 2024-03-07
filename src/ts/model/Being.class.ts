@@ -24,6 +24,8 @@ export default class Being {
 	combatState: CombatState;
 	armorModifier: ArmorModifier;
 	weapon: Weapon;
+	speed: number
+	speedState: number;
 
 	get x(): number {
 		return this.xPosition;
@@ -51,6 +53,8 @@ export default class Being {
 			damageRange: [1, 12],
 			threatRange: [20, 20],
 		}
+		this.speed = race.speed || 2;
+		this.speedState = 0;
 	}
 
 	act () {
@@ -106,7 +110,12 @@ export default class Being {
 		if (!this.level.canWalkTo(this.x+dx,this.y+dy)){
 			return;
 		}
-		this.moveTo(dx, dy);
+
+		this.speedState += 1;
+		this.speedState = this.speedState % this.speed;
+		if(this.speedState === 0){
+			this.moveTo(dx, dy);
+		}
 	}
 
 	getNearestEnemy () {

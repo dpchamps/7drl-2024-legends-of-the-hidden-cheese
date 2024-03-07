@@ -3,7 +3,7 @@ import {OverworldMapTile} from "./proc-gen/generate-overworld";
 import {spawnItemLootDrops} from "./proc-gen/level-loot-drops";
 
 export default {
-	generateTestLevel: function(level, player, fromId, nextLevelId, height, width, idPrefix: string, overworld: Record<string, OverworldMapTile>, knownExit?: {x: number, y: number}){
+	generateTestLevel: function(level, fromId, nextLevelId, height, width){
 		for (var x = 0; x < width; x++){
 			level.map[x] = [];
 			level.mapFeatures[x] = [];

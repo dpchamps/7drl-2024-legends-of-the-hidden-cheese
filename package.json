@@ -50,6 +50,7 @@
     ]
   },
   "dependencies": {
+    "@pixi/sound": "^5.2.3",
     "@pixi/ui": "^0.4.1",
     "pixi.js": "^7.0.4",
     "random": "^4.1.0",

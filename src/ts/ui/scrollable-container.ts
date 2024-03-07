@@ -1,7 +1,7 @@
 import {Container, Sprite, Texture} from "pixi.js";
 import PixiUtils from "../display/pixiDisplay/PixiUtils";
 
-type ScrollableContainerInput = {
+type ScrollableContainerInput<T> = {
     x: number,
     y: number
     width: number,
@@ -10,11 +10,14 @@ type ScrollableContainerInput = {
     cursorTexture: Texture,
     textFontSize: number,
     containerTitle: string,
-    padding: number
+    padding: number,
+    containerName?: T,
+    lineHeight?: number
 }
-export const createScrollableContainer = ({x, y, height, width, backgroundTexture, cursorTexture, textFontSize, containerTitle, padding}: ScrollableContainerInput) => {
+export const createScrollableContainer = <T extends string = undefined>({x, y, height, width, backgroundTexture, cursorTexture, textFontSize, containerTitle, padding, containerName, lineHeight}: ScrollableContainerInput<T>) => {
     const spacing = PixiUtils.getTextScaledHeight(textFontSize);
-    const maxRenderItems = Math.floor((height-(spacing*2)) / 10);
+    const scrollLineHeight = lineHeight || 1;
+    const maxRenderItems = Math.floor((height-(spacing*2)) / (10*scrollLineHeight));
     const scrollOffset = Math.floor(maxRenderItems/2);
 
     const title = PixiUtils.createTextBox(0, 0, textFontSize, containerTitle);
@@ -36,7 +39,7 @@ export const createScrollableContainer = ({x, y, height, width, backgroundTextur
     topLevelContainer.visible = false;
 
     return {
-        name: 'scrollableContainer',
+        name: containerName || 'scrollableContainer',
         container: topLevelContainer,
         render: (selectedIndex: number, items: string[], isSelected: boolean) => {
             cursor.visible = isSelected;
@@ -50,10 +53,11 @@ export const createScrollableContainer = ({x, y, height, width, backgroundTextur
                 const item = offsetItems[i];
                 if(!item) continue;
 
-                const text = PixiUtils.createTextBox(padding, spacing + i * 10, textFontSize, item);
+                const text = PixiUtils.createTextBox(0, (spacing + i * 10 * scrollLineHeight), textFontSize, item, 900);
                 scrollableContent.addChild(text);
             }
-            cursor.position.y = (spacing - 3) + (selectedIndex - startIndex) * 10;
+            cursor.position.y = (spacing - 3) + (selectedIndex - startIndex) * 10 * scrollLineHeight;
+            cursor.position.x = -padding
             topLevelContainer.visible = true;
 
         },

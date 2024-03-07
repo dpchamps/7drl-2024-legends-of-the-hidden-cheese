@@ -43,6 +43,8 @@ export default {
 	},
 	init: function(game) {
 		this.game = game;
+		// this.combatState.vitals.xp = 1_000_000;
+		// this.combatState.gainExperience(1_000_000, () => {});
 		this.initSight();
 	},
 	reset(){
@@ -94,7 +96,6 @@ export default {
 
 			if(targetBeing.combatState.getStatus() === "Dead"){
 				const xpGained = calculateXpGained(this.combatState.stats.level, targetBeing.combatState.stats.level);
-				console.log({xpGained});
 				this.combatState.gainExperience(xpGained, (lastLevel, nextLevel) => {
 					this.game.display.message(`You gained a level, from ${lastLevel} to ${nextLevel}.`);
 				})

@@ -14,10 +14,11 @@ import {ScrollBox} from "@pixi/ui";
 import {createScrollableContainer} from "../../ui/scrollable-container";
 import {createInventoryScreen} from "../../ui/inventory-screen";
 import {createHUD} from "../../ui/hud";
-
+import {sound, Sound} from "@pixi/sound";
 
 
 let theCanvas;
+
 
 function resizeCanvas () {
 	if (!theCanvas) {
@@ -39,6 +40,21 @@ function resizeCanvas () {
 
 window.addEventListener("resize", resizeCanvas);
 
+const loadSound = (url: string): Promise<Sound> => new Promise((res, rej) => {
+	Sound.from({
+		url,
+		preload: true,
+		loop: true,
+		volume: 0.005,
+		loaded(err, sound){
+			if(err) return rej(err);
+			res(sound);
+		}
+	});
+});
+
+
+
 export default {
 	init: async function(game, config) {
 		this.textureMap = {};
@@ -54,6 +70,14 @@ export default {
 		document.getElementById('game').appendChild(app.view);
 		theCanvas = app.view;
 		const spritesheetURL = config.tilesetURL;
+
+		this.introMusic = await loadSound("assets/music/Three-Red-Hearts-Sanctuary.ogg");
+		this.gamePlayMusic = await loadSound("assets/music/Three Red Hearts - Pixel War 2.ogg");
+		// intro.play();
+		// const introSong = await Assets.load("assets/music/Three-Red-Hearts-Sanctuary.ogg");
+		// debugger
+		// introSong.play();
+
 		const blackTexture = await Assets.load('assets/gfx/black.png');
 		const baseTexture = await Assets.load(spritesheetURL);
 		const worldTileset = await Assets.load("assets/gfx/1bitpack_kenney_1.2/roguelikeSheet_transparent.png")
@@ -103,12 +127,12 @@ export default {
 		mainGameContainer.visible = false;
 		this.screens.push(mainGameContainer);
 		this.tileLayers = [
-			[],[],[],[]
+			[],[],[],[],[]
 		];
 		for (let x = 0; x < config.viewportCountX; x++) {
 			for (let y = 0; y < config.viewportCountY; y++) {
 				for (let l = 0; l <= this.tileLayers.length-1; l++) {
-					const sprite = new Sprite(this.textureMap['0-0'])
+					const sprite = new Sprite(this.textureMap['0-0']);
 					sprite.zIndex = l
 					if(l === 3){
 						sprite.zIndex = 1;
@@ -117,6 +141,13 @@ export default {
 					this.tileLayers[l][x+'-'+y] = sprite;
 					sprite.position.x = x * tileSize;
 					sprite.position.y = y * tileSize;
+					if(l === 4){
+						const levelBox = PixiUtils.createTextBox((x*tileSize)+(tileSize), y*tileSize-(tileSize/2), 50, "", undefined, 0x0);
+						this.tileLayers[l][`${x}-${y}`] = levelBox;
+						mainGameContainer.addChild(levelBox);
+						levelBox.zIndex = 1000;
+						levelBox.visible = false;
+					}
 				}
 			}
 		}
@@ -220,6 +251,20 @@ export default {
 			return null;
 		}
 	},
+	getBeingLevel(x: number, y: number){
+		var level = this.game.world.level;
+		var xr = x - level.player.x;
+		var yr = y - level.player.y;
+		if (level.player.canSee(xr, yr)){
+			if (level.beings[x] && level.beings[x][y]){
+				return level.beings[x][y].combatState.stats.level;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	},
 	refresh: function() {
 		const player = this.game.world.level.player;
 		const noTexture = this.textureMap['0-0'];
@@ -250,6 +295,13 @@ export default {
 				this.tileLayers[2][index].texture = beingTexture;
 				this.tileLayers[2][index].tint = 0x0;
 				this.tileLayers[3][index].texture = mapFeatureTexture
+				if(being){
+					this.tileLayers[4][index].visible = true;
+					this.tileLayers[4][index].text = this.getBeingLevel(mapX, mapY);
+				} else {
+					this.tileLayers[4][index].text = "";
+					this.tileLayers[4][index].visible = false;
+				}
 			}
 		}
 		const equippedItems = this.game.input.inventoryManager.getEquipped().filter((x) => x !== null).map((item) => {
@@ -281,13 +333,25 @@ export default {
 		showScreen();
 	},
 	titleScreen() {
-		this.screenTransition(() => this.titleScreenContainer.visible = true);
+		this.screenTransition(() => {
+			this.titleScreenContainer.visible = true
+			this.gamePlayMusic.stop();
+			this.introMusic.play();
+		});
 	},
 	activateNewGame() {
 		this.textBox.reset();
-		this.screenTransition(() => this.mainGameContainer.visible = true);
+		this.screenTransition(() => {
+			this.mainGameContainer.visible = true
+			this.introMusic.stop();
+			this.gamePlayMusic.play();
+		});
 	},
 	showGameOverScreen(gameOverStatus: GameOverState) {
-		this.screenTransition(() => showGameOverScreen(gameOverStatus, this.gameOverScreenContainer, this.textBox));
+		this.screenTransition(() => {
+			showGameOverScreen(gameOverStatus, this.gameOverScreenContainer, this.textBox, this.game.deathCount);
+			this.gamePlayMusic.stop();
+			this.introMusic.play();
+		});
 	}
 }

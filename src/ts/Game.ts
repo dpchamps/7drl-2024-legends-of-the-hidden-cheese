@@ -26,7 +26,9 @@ declare global {
 
 const Game = {
 	seed: undefined,
+	deathCount: 0,
 	start: async function(config) {
+
 		let selectedDisplay;
 		switch (config.display) {
 			case 'pixi':
@@ -53,8 +55,12 @@ const Game = {
 		this.display.titleScreen();
 	},
 	endGame(endGameStatus: GameOverState) {
+		if(endGameStatus === "LOSE"){
+			this.deathCount += 1;
+		}
 		random.setSeed(this.seed);
 		this.input.mode = "TITLE";
+
 		this.player.reset();
 		Input.init(this);
 		this.world.reset(this);

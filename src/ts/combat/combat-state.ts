@@ -1,6 +1,6 @@
 import * as Stats from "./stats";
 import * as Vitals from "./vitals";
-import {ExperienceThresholds, getExperienceForLevel, StatGrowthTable} from "../data/experience-table.data";
+import {ExperienceThresholds, getExperienceForLevel, LEVEL_CAP, StatGrowthTable} from "../data/experience-table.data";
 
 export type BeingState = "Alive" | "Dead" | "Dying";
 
@@ -39,6 +39,10 @@ export class CombatState {
     }
 
     gainExperience(amount: number, onLevelUp: (from: number, to: number) => void) {
+        if(this.stats.level === LEVEL_CAP-1){
+            this.vitals.xp = this.stats.xp;
+            return;
+        }
         this.vitals.xp += amount;
 
         if(this.vitals.xp >= this.stats.xp){

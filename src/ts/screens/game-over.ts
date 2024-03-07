@@ -16,7 +16,10 @@ export const createGameOverScreen = (config) => {
     );
     gameoverContainer.addChild(
         PixiUtils.createTextBox(20, 40, config.textboxFontSize, "Press space to start again.")
-    )
+    );
+    gameoverContainer.addChild(
+        PixiUtils.createTextBox(250, 20, config.textboxFontSize, "")
+    );
     gameoverContainer.addChild(gameOverLog)
     gameoverContainer.visible = false;
 
@@ -24,8 +27,9 @@ export const createGameOverScreen = (config) => {
 }
 
 export type GameOverState = "WIN" | "LOSE";
-export const showGameOverScreen = (gameOverState: GameOverState, container: Container<DisplayObject>, messageLog: PIXITextBox) => {
-    (container.getChildAt(3) as any).text = `Event Log:\n${messageLog.getLog()}`
+export const showGameOverScreen = (gameOverState: GameOverState, container: Container<DisplayObject>, messageLog: PIXITextBox, deathCount: number) => {
+    (container.getChildAt(3) as any).text = `Death Count: ${deathCount}`;
+    (container.getChildAt(4) as any).text = `Event Log:\n${messageLog.getLog()}`;
     switch(gameOverState) {
         case "WIN": {
             container.getChildAt(0).visible = false;

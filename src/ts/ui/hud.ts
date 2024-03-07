@@ -8,7 +8,7 @@ const HEART_DIVIDER = 20;
 const HUD_PADDING = 5;
 const HUD_COLOR = 0x343434;
 const HUD_COLOR_INNER = 0x9A8F87;
-const HUD_HEIGHT = 43;
+const HUD_HEIGHT = 50;
 const HUD_WIDTH = 180
 type HudInput = {
     heartFilledTexture: Texture,
@@ -26,6 +26,7 @@ export const createHUD = ({heartFilledTexture, heartEmptyTexture, messageLog}: H
     );
     hudContainer.addChild(updatable)
     messageLog.PIXIText.position.x = HUD_WIDTH+HUD_PADDING+2;
+    messageLog.PIXIText.position.y = HUD_PADDING;
     messageLog.PIXIText.style = {...messageLog.PIXIText.style, wordWrapWidth: 900}
 
     hudContainer.addChild(messageLog.PIXIText);
@@ -41,10 +42,10 @@ export const createHUD = ({heartFilledTexture, heartEmptyTexture, messageLog}: H
             updatable.addChild(playerLevel, playerMapPosition);
             const numberHearts = Math.floor(playerCombatState.stats.health / HEART_DIVIDER);
             Array(numberHearts).fill(0).forEach((_, i) => {
-                const texture = playerCombatState.vitals.health >= i * HEART_DIVIDER ? heartFilledTexture : heartEmptyTexture;
+                const texture = playerCombatState.vitals.health >= i * HEART_DIVIDER ? heartFilledTexture : null;
                 const sprite = new Sprite(texture);
-                sprite.position.x = HUD_PADDING+ i * 16;
-                sprite.position.y = HUD_PADDING + PixiUtils.getTextScaledHeight(70);
+                sprite.position.x = HUD_PADDING+ (i% 10) * 16;
+                sprite.position.y = HUD_PADDING + PixiUtils.getTextScaledHeight(70) + (Math.floor(i / 10) * 5);
                 updatable.addChild(sprite)
             });
             equippedItems.forEach((texture, i) => {

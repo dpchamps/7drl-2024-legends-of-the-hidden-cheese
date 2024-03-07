@@ -21,9 +21,9 @@ export type WeaponType = "Sword" | "Axe" | "Dagger" | "Great Sword";
 
 const weaponRange = (weaponType: WeaponType) => {
     switch (weaponType) {
-        case "Sword": return {damageRange: [1, 8],threatRange: [19, 20]} as const
-        case "Axe": return { damageRange: [1, 10], threatRange: [20, 20]} as const
-        case "Dagger": return { damageRange: [1, 4], threatRange: [18, 20]} as const
+        case "Sword": return {damageRange: [1, 10],threatRange: [19, 20]} as const
+        case "Axe": return { damageRange: [2, 20], threatRange: [20, 20]} as const
+        case "Dagger": return { damageRange: [2, 8], threatRange: [18, 20]} as const
         case "Great Sword": return { damageRange: [1, 12], threatRange: [20, 20]} as const
     }
 };
@@ -40,6 +40,13 @@ const weaponTiles = (weaponType: WeaponType) => {
 const generateWeaponStats = (weaponType: WeaponType, rarity: ItemRarity, name: string) => {
     const {damageRange, threatRange} = weaponRange(weaponType);
     const baseStats = weaponStats({name, damageRange, threatRange});
+
+    switch (weaponType){
+        case "Sword":
+        case "Dagger":{
+            baseStats.accuracyMod += 1;
+        }
+    }
 
     switch (rarity){
         case "Uncommon":

@@ -126,3 +126,31 @@ as different maps, different layouts, different loot drops on each run.
   - [x] Biomes throughout the world
   - [x] Appropriate item placement in each biome
 - [x] Sensible wandering monster encounters
+
+### Bug Bash and QOL Edition
+
+
+- [x] "Not being able to flee is a bummer."
+  - [x] Currently, player is unable to flee from monsters. Bad game experience
+  - [x] Fix: Make monsters slower
+- [x] I don't know what I'm fighting until it's too late
+  - Fix: display level ontop of monster
+- [x] Text Log frequently overflows the container that it's in
+  - [x] Fix: Maybe Log Rotation
+  - [x] Made HUD a little teensy bit bigger
+  - [x] QOL: Add event log to main menu
+- [x] Biomes are totally random right now
+  - [x] It's very easy to quickly wander into a high-level biome, which means certain death
+  - [x] Balance problem: I can get a desert biome on the second screen and get a +15 armor
+  - [x] Fix: assign biomes based on layers from 0-0 outward increasing in biome difficulty
+- [ ] The start of the game is super duper random.
+  - [ ] Fix: have a deterministic starting tile. One rat, one weapon.
+- [x] Death Counter.
+- [x] Bug: sometimes for reasons unknown player gets sent to edge
+  - ???
+- [x] Bug: enemies can be spawned on edge tiles, which leads to surprise deaths
+  - [x] Do not spawn things on the edge ever
+- [x] Weapons are a little bit boring
+  - [x] Axes and daggers should be rebalanced to do 2d10 and 2d4 respectively
+  - [x] Base sword accuracy is plus 1 
+  - [x] Base Dagger accuracy is plus 1

@@ -23,7 +23,6 @@ const FULL_STATS_TABLE = StatGrowthTable.reduce(([last, table], next, i) => {
     dexterity: 2
 }), {} as Record<string, any>] as const)[1];
 
-console.log(FULL_STATS_TABLE);
 export const itemRarityFromLevel = (level: number): ItemRarity => {
     if(level < 4) return "Common";
     if(level >= 4 && level < 7) return "Uncommon";
@@ -47,12 +46,14 @@ export const spawnMonster = (levelRange: [number, number], lootTable: LootTable)
         base: monsterLevel+Random.n(-2, 2)
     }
 
-    randomWeapon.name = MONSTER_WEAPON_NAME[Random.n(0, MONSTER_WEAPON_NAME.length-1)]
-
     return {
         ...race,
         name,
         stats,
+        weapon : {
+            ...(randomWeapon as any).weaponStats,
+            name: MONSTER_WEAPON_NAME[Random.n(0, MONSTER_WEAPON_NAME.length-1)]
+        },
         armorModifier
     }
 }

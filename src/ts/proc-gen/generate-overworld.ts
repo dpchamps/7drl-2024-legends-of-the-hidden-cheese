@@ -53,6 +53,7 @@ const overworldMapBuilder = () => {
     return {
         testGet: () => overworldMap,
         getOverworldMap(){
+            Object.values(overworldMap).forEach((tile) => this.updateExitsFromNewNeighbor(tile));
             return Object.values(overworldMap).reduce(
                 (constructedBuilderMap, mapTile) => {
                     const mapId = `${mapTile.worldMapCoord.x}-${mapTile.worldMapCoord.y}`;
@@ -123,7 +124,7 @@ const randomTile = (x: number, y: number) => ({
     exits: getRandomExits()
 });
 
-const getRelativeCoordinate = (lastCoord: Coord, direction: Coord) => ({
+export const getRelativeCoordinate = (lastCoord: Coord, direction: Coord) => ({
     x: lastCoord.x + direction.x,
     y: lastCoord.y + direction.y
 })
@@ -141,7 +142,9 @@ export const generateOverWorld = (nTiles: number) => {
         overworld.updateExitsFromNewNeighbor(nextTile);
         nextTile.exits.forEach((exit) => {
             const nextPosition = getRelativeCoordinate(nextTile.worldMapCoord, exit);
-            if(visited.has(`${nextPosition.x}-${nextPosition.y}`)) return;
+            const id = `${nextPosition.x}-${nextPosition.y}`
+            if(visited.has(id)) return;
+
             const tile = randomTile(nextPosition.x, nextPosition.y);
             const nextExits = new Set([...tile.exits.map(coordToExit), oppositeExit(coordToExit(exit))]);
             tile.exits  = Array.from(nextExits).map(exitToCoord)
@@ -149,8 +152,6 @@ export const generateOverWorld = (nTiles: number) => {
         })
         nTiles -=1;
     }
-
-
 
     return overworld.getOverworldMap();
 }

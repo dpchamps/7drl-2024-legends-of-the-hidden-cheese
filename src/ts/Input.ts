@@ -28,7 +28,7 @@ const inventoryInputManager = (game) => {
 		},
 		selectionPane: () => selectionPane,
 		selectionIdx: () => selectionIdx,
-		screenItems: () => outerSelect === 0 ? game.player.getConsumables() : game.player.getEquipment(),
+		screenItems: () => outerSelect === 0 ? game.player.getConsumables() : outerSelect === 1 ? game.player.getEquipment() : game.display.textBox.getLastMessages(20),
 		selectedItem(){
 			const items = this.screenItems();
 			return items[selectionIdx]
@@ -41,7 +41,7 @@ const inventoryInputManager = (game) => {
 			switch (k) {
 				case ut.KEY_ESCAPE: return exitInventory();
 				case ut.KEY_S: {
-					outerSelect = Math.min(outerSelect + 1, 3);
+					outerSelect = Math.min(outerSelect + 1, 4);
 					break;
 				}
 				case ut.KEY_W: {
@@ -49,7 +49,7 @@ const inventoryInputManager = (game) => {
 					break
 				}
 				case ut.KEY_D: {
-					if(outerSelect > 1) break;
+					if(outerSelect > 1 && outerSelect !== 4) break;
 					selectionPane = true;
 					selectionIdx = 0;
 					break
@@ -70,6 +70,7 @@ const inventoryInputManager = (game) => {
 				selectionPane = false;
 			}
 			else if (k === ut.KEY_ENTER ){
+				if(outerSelect === 4) return "INVENTORY";
 				const selectedItem = this.selectedItem();
 
 				if(outerSelect === 1){

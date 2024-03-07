@@ -73,7 +73,7 @@ export default {
 				LevelLoader.loadLevel(this.level, levelId, previousLevelId, "world", this.overworldMap);
 			} else {
 				this.level = new Level(this.game, levelId);
-				LevelGenerator.generateTestLevel(this.level, this.player, undefined, levelId, 25, 25, "world", this.overworldMap);
+				LevelGenerator.generateTestLevel(this.level, undefined, levelId, 25, 25);
 			}
 			this.levels[levelId] = this.level;
 		}
