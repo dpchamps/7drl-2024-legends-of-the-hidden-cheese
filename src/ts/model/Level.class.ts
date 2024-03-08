@@ -60,7 +60,7 @@ export default class Level {
 			const drop = rollDrop(this.game.world.lootTable, being.combatState.stats.level);
 			this.beingsList.splice(beingsListIdx, 1);
 			this.beings[being.x][being.y] = undefined;
-			if(drop){
+			if(drop && !this.getItem(being.x, being.y)){
 				this.addItem(drop, being.x, being.y);
 				this.game.display.message(`The ${being.tileName} dropped a ${drop.def.name}.`);
 			}

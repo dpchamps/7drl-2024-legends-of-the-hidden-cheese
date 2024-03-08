@@ -109,7 +109,7 @@ const overworldMapBuilder = () => {
                 return typeof overworldMap[`${exitTo.x}-${exitTo.y}`] !== "undefined"
             });
             overworldMap[`${tile.worldMapCoord.x}-${tile.worldMapCoord.y}`] = tile
-        }
+        },
     }
 }
 

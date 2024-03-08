@@ -4,11 +4,11 @@ import Being from "../model/Being.class";
 import {spawnMonster} from "./monster-generator";
 import {LootTable} from "./LootTable";
 
-const MONSTER_SPAWN_RATE = 0.6;
+const MONSTER_SPAWN_RATE = 0.63;
 const MONSTER_SPAWN_PERCENT = MONSTER_SPAWN_RATE * 100;
 export const spawnWanderingMonsters = (level: Level, lootTable: LootTable) => {
     const roll = Random.n(0, 100);
-    if(level.hasBeings() || roll > MONSTER_SPAWN_PERCENT) {
+    if(level.hasBeings() || roll <= MONSTER_SPAWN_PERCENT) {
         return
     }
     const monstersToSpawn = Random.n(1, 4);

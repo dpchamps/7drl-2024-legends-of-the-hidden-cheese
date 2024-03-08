@@ -65,6 +65,9 @@ export default class Being {
 			case 'CHASE':
 				this.actChase();
 				break;
+			case 'Guard':
+				this.actGuard();
+				break
 			case 'DONOTHING':
 				break;
 		}
@@ -115,6 +118,35 @@ export default class Being {
 		this.speedState = this.speedState % this.speed;
 		if(this.speedState === 0){
 			this.moveTo(dx, dy);
+		}
+	}
+
+	actGuard(){
+		var nearestEnemy = this.getNearestEnemy();
+		if (!nearestEnemy){
+			return;
+		}
+		var dx = Math.sign(nearestEnemy.x - this.x);
+		var dy = Math.sign(nearestEnemy.y - this.y);
+
+		const targetX = this.x + dx;
+		const targetY = this.y + dy;
+		if(targetX === nearestEnemy.x && targetY === nearestEnemy.y){
+			Combat.combatPhase(this, nearestEnemy, (hitType) => {
+				switch (hitType.type) {
+					case "Miss": {
+						this.game.display.message(`The enemy ${this.tileName} attempts to hit you with it's ${this.weapon.name}, but it misses.`)
+						break;
+					}
+					case "Hit": {
+						this.game.display.message(`The enemy ${this.tileName} hits you with it's ${this.weapon.name}.`)
+						break
+					}
+					case "Critical": {
+						this.game.display.message(`The enemy ${this.tileName} deals a devastating blow with it's ${this.weapon.name}.`)
+					}
+				}
+			})
 		}
 	}
 

@@ -155,3 +155,4 @@ as different maps, different layouts, different loot drops on each run.
   - [x] Axes and daggers should be rebalanced to do 2d10 and 2d4 respectively
   - [x] Base sword accuracy is plus 1 
   - [x] Base Dagger accuracy is plus 1
+

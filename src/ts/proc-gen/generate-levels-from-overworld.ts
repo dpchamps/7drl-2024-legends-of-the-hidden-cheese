@@ -22,8 +22,8 @@ const mirror = (x: number, y: number, width: number, height: number) => {
 }
 
 const generateExitOnEdge = (direction: Exit, width: number, height: number) => {
-    	const xRand = Random.n(1, width-2);
-    	const yRand =  Random.n(1, height-2);
+    	const xRand = Random.n(3, width-4);
+    	const yRand =  Random.n(3, height-4);
     	let x = 0;
     	let y = 0;
     	switch (direction) {
